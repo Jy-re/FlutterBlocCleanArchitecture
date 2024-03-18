@@ -32,23 +32,26 @@ class ToDoScreenState extends State<ToDoScreen> {
           Expanded(
             child: BlocBuilder<ToDoBloc, ToDoState>(
               builder: (context, state) {
-                final List<ToDo> toDos = (state as ToDoListState?)?.toDos ?? [];
-                return ListView.builder(
-                  itemCount: toDos.length,
-                  itemBuilder: (context, index) {
-                    final toDo = toDos[index];
-                    return ListTile(
-                      title: Text(toDo.title),
-                      leading: Text((index + 1).toString()),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {
-                          context.read<ToDoBloc>().add(DeleteTodoEvent(toDo));
-                        },
-                      ),
-                    );
-                  },
-                );
+                if (state is ToDoListState) {
+                  return ListView.builder(
+                    itemCount: state.toDos.length,
+                    itemBuilder: (context, index) {
+                      final toDo = state.toDos[index];
+                      return ListTile(
+                        title: Text(toDo.title),
+                        leading: Text((index + 1).toString()),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () {
+                            context.read<ToDoBloc>().add(DeleteTodoEvent(toDo));
+                          },
+                        ),
+                      );
+                    },
+                  );
+                } else {
+                  return const Center(child: CircularProgressIndicator());
+                }
               },
             ),
           ),
