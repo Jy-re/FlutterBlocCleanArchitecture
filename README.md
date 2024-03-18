@@ -1,6 +1,6 @@
 # todo_bloc_clean_architecture
 
-A new Flutter project.
+A todolist application made with flutter. An internship training project to apply bloc state management and clean architecture
 
 ## Output
 
