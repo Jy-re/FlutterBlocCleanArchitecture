@@ -13,7 +13,7 @@ class ToDoScreen extends StatefulWidget {
 }
 
 class ToDoScreenState extends State<ToDoScreen> {
-  final TextEditingController _textController = TextEditingController();
+  final TextEditingController textController = TextEditingController();
 
   @override
   void initState() {
@@ -49,54 +49,63 @@ class ToDoScreenState extends State<ToDoScreen> {
                       );
                     },
                   );
+                } else {
+                  return const Center(child: CircularProgressIndicator());
                 }
-                return const Center(child: CircularProgressIndicator());
               },
             ),
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _showAddToDoDialog(context),
+        onPressed: () => showAddToDoDialog(context),
         tooltip: 'Add ToDo',
         child: const Icon(Icons.add),
       ),
     );
   }
 
-  void _showAddToDoDialog(BuildContext context) {
+  void showAddToDoDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Add New ToDo"),
-          content: TextField(
-            controller: _textController,
-            decoration: const InputDecoration(hintText: "ToDo Title"),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text("Add"),
-              onPressed: () {
-                final title = _textController.text;
-                if (title.isNotEmpty) {
-                  final newToDo = ToDo(
-                    id: DateTime.now().millisecondsSinceEpoch,
-                    title: title,
-                  );
-                  context.read<ToDoBloc>().add(AddToDoEvent(newToDo));
-                  Navigator.of(context).pop();
-                  _textController.clear();
-                }
-              },
-            ),
-            TextButton(
-              child: const Text("Cancel"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
+        return BlocBuilder<ToDoBloc, ToDoState>(
+          builder: (context, state) {
+            if (state is ToDoListState) {
+              return AlertDialog(
+                title: const Text("Add New ToDo"),
+                content: TextField(
+                  controller: textController,
+                  decoration: const InputDecoration(hintText: "ToDo Title"),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text("Add"),
+                    onPressed: () {
+                      final title = textController.text;
+                      if (title.isNotEmpty) {
+                        final newToDo = ToDo(
+                          id: state.toDos.length + 1,
+                          title: title,
+                        );
+                        context.read<ToDoBloc>().add(AddToDoEvent(newToDo));
+                        Navigator.of(context).pop();
+                        textController.clear();
+                      }
+                    },
+                  ),
+                  TextButton(
+                    child: const Text("Cancel"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            } else {
+              return const SizedBox();
+            }
+          },
         );
       },
     );
