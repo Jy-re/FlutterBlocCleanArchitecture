@@ -5,13 +5,12 @@ import '../../domain/entities/todo.dart';
 import '../serializers/todo_model.dart';
 
 class SharedPreferenceDataProvider implements ToDoRepository {
-  
-  static const String _todoListKey = 'todoList';
+  static const String todoListKey = 'todoList';
 
   @override
   Future<List<ToDo>> getToDos() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? jsonList = prefs.getString(_todoListKey);
+    final String? jsonList = prefs.getString(todoListKey);
     if (jsonList != null) {
       final List<dynamic> decodedList = jsonDecode(jsonList);
       return decodedList.map((e) => ToDoSerialization.fromJson(e)).toList();
@@ -26,7 +25,7 @@ class SharedPreferenceDataProvider implements ToDoRepository {
     currentList.add(todo);
     final String encodedList = jsonEncode(
         currentList.map((todo) => ToDoSerialization.toJson(todo)).toList());
-    await prefs.setString(_todoListKey, encodedList);
+    await prefs.setString(todoListKey, encodedList);
   }
 
   @override
@@ -36,6 +35,6 @@ class SharedPreferenceDataProvider implements ToDoRepository {
     currentList.removeWhere((element) => element.id == todo.id);
     final String encodedList = jsonEncode(
         currentList.map((todo) => ToDoSerialization.toJson(todo)).toList());
-    await prefs.setString(_todoListKey, encodedList);
+    await prefs.setString(todoListKey, encodedList);
   }
 }
