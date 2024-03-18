@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todo_bloc_clean_architecture/domain/repository/todo_repository.dart';
 import '../../domain/entities/todo.dart';
+import '../serializers/todo_model.dart';
 
 class SharedPreferenceDataProvider implements ToDoRepository {
+  
   static const String _todoListKey = 'todoList';
 
   @override
@@ -12,7 +14,7 @@ class SharedPreferenceDataProvider implements ToDoRepository {
     final String? jsonList = prefs.getString(_todoListKey);
     if (jsonList != null) {
       final List<dynamic> decodedList = jsonDecode(jsonList);
-      return decodedList.map((e) => ToDo.fromJson(e)).toList();
+      return decodedList.map((e) => ToDoSerialization.fromJson(e)).toList();
     }
     return [];
   }
@@ -22,7 +24,8 @@ class SharedPreferenceDataProvider implements ToDoRepository {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final List<ToDo> currentList = await getToDos();
     currentList.add(todo);
-    final String encodedList = jsonEncode(currentList);
+    final String encodedList = jsonEncode(
+        currentList.map((todo) => ToDoSerialization.toJson(todo)).toList());
     await prefs.setString(_todoListKey, encodedList);
   }
 
@@ -31,7 +34,8 @@ class SharedPreferenceDataProvider implements ToDoRepository {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     List<ToDo> currentList = await getToDos();
     currentList.removeWhere((element) => element.id == todo.id);
-    final String encodedList = jsonEncode(currentList);
+    final String encodedList = jsonEncode(
+        currentList.map((todo) => ToDoSerialization.toJson(todo)).toList());
     await prefs.setString(_todoListKey, encodedList);
   }
 }
