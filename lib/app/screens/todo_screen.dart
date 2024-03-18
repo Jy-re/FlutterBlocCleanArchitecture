@@ -32,26 +32,23 @@ class ToDoScreenState extends State<ToDoScreen> {
           Expanded(
             child: BlocBuilder<ToDoBloc, ToDoState>(
               builder: (context, state) {
-                if (state is ToDoListState) {
-                  return ListView.builder(
-                    itemCount: state.toDos.length,
-                    itemBuilder: (context, index) {
-                      final toDo = state.toDos[index];
-                      return ListTile(
-                        title: Text(toDo.title),
-                        leading: Text((index + 1).toString()),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () {
-                            context.read<ToDoBloc>().add(DeleteTodoEvent(toDo));
-                          },
-                        ),
-                      );
-                    },
-                  );
-                } else {
-                  return const Center(child: CircularProgressIndicator());
-                }
+                final List<ToDo> toDos = (state as ToDoListState?)?.toDos ?? [];
+                return ListView.builder(
+                  itemCount: toDos.length,
+                  itemBuilder: (context, index) {
+                    final toDo = toDos[index];
+                    return ListTile(
+                      title: Text(toDo.title),
+                      leading: Text((index + 1).toString()),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () {
+                          context.read<ToDoBloc>().add(DeleteTodoEvent(toDo));
+                        },
+                      ),
+                    );
+                  },
+                );
               },
             ),
           ),
@@ -71,40 +68,37 @@ class ToDoScreenState extends State<ToDoScreen> {
       builder: (BuildContext context) {
         return BlocBuilder<ToDoBloc, ToDoState>(
           builder: (context, state) {
-            if (state is ToDoListState) {
-              return AlertDialog(
-                title: const Text("Add New ToDo"),
-                content: TextField(
-                  controller: textController,
-                  decoration: const InputDecoration(hintText: "ToDo Title"),
-                ),
-                actions: <Widget>[
-                  TextButton(
-                    child: const Text("Add"),
-                    onPressed: () {
-                      final title = textController.text;
-                      if (title.isNotEmpty) {
-                        final newToDo = ToDo(
-                          id: state.toDos.length + 1,
-                          title: title,
-                        );
-                        context.read<ToDoBloc>().add(AddToDoEvent(newToDo));
-                        Navigator.of(context).pop();
-                        textController.clear();
-                      }
-                    },
-                  ),
-                  TextButton(
-                    child: const Text("Cancel"),
-                    onPressed: () {
+            final toDos = (state as ToDoListState).toDos;
+            return AlertDialog(
+              title: const Text("Add New ToDo"),
+              content: TextField(
+                controller: textController,
+                decoration: const InputDecoration(hintText: "ToDo Title"),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text("Add"),
+                  onPressed: () {
+                    final title = textController.text;
+                    if (title.isNotEmpty) {
+                      final newToDo = ToDo(
+                        id: toDos.length + 1,
+                        title: title,
+                      );
+                      context.read<ToDoBloc>().add(AddToDoEvent(newToDo));
                       Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              );
-            } else {
-              return const SizedBox();
-            }
+                      textController.clear();
+                    }
+                  },
+                ),
+                TextButton(
+                  child: const Text("Cancel"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
           },
         );
       },
