@@ -1,16 +1,9 @@
 # todo_bloc_clean_architecture
 
-A new Flutter project.
+A todolist application made with flutter. An internship training project to apply bloc state management and clean architecture
 
-## Getting Started
+## Output
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+https://github.com/Jy-re/FlutterBlocCleanArchitecture/assets/102701655/1c8da9f0-55a5-433c-bb5f-7384f72c1f52
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
