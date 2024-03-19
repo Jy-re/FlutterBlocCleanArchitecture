@@ -24,11 +24,38 @@ class ToDoScreenState extends State<ToDoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('ToDo List'),
-      ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          Container(
+            color: Colors.redAccent,
+            child: const Padding(
+              padding: EdgeInsets.symmetric(vertical: 50.0),
+              child: Column(
+                children: [
+                  Center(
+                      child: Text(
+                    'TODOLIST',
+                    style: TextStyle(
+                      fontSize: 40.0,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                    ),
+                    textAlign: TextAlign.center,
+                  )),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Center(
+                      child: Text(
+                    'Click on the  to mark as complete',
+                    style: TextStyle(color: Colors.white, fontSize: 18.0),
+                    textAlign: TextAlign.center,
+                  )),
+                ],
+              ),
+            ),
+          ),
           Expanded(
             child: BlocBuilder<ToDoBloc, ToDoState>(
               builder: (context, state) {
@@ -37,15 +64,33 @@ class ToDoScreenState extends State<ToDoScreen> {
                     itemCount: state.toDos.length,
                     itemBuilder: (context, index) {
                       final toDo = state.toDos[index];
-                      return ListTile(
-                        title: Text(toDo.title),
-                        leading: Text((index + 1).toString()),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () {
-                            context.read<ToDoBloc>().add(DeleteTodoEvent(toDo));
-                          },
-                        ),
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 20.0),
+                        child: ListTile(
+                            title: Text(
+                              toDo.title,
+                              style: TextStyle(
+                                decoration: toDo.isComplete
+                                    ? TextDecoration.lineThrough
+                                    : TextDecoration.none,
+                              ),
+                            ),
+                            leading: Text((index + 1).toString()),
+                            trailing: IconButton(
+                              icon: const Icon(Icons.delete),
+                              onPressed: () {
+                                context
+                                    .read<ToDoBloc>()
+                                    .add(DeleteTodoEvent(toDo));
+                              },
+                            ),
+                            onTap: () {
+                              final updatedToDo =
+                                  toDo.copyWith(isComplete: !toDo.isComplete);
+                              context
+                                  .read<ToDoBloc>()
+                                  .add(UpdateToDoEvent(updatedToDo));
+                            }),
                       );
                     },
                   );
@@ -58,9 +103,13 @@ class ToDoScreenState extends State<ToDoScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.redAccent,
         onPressed: () => showAddToDoDialog(context),
         tooltip: 'Add ToDo',
-        child: const Icon(Icons.add),
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
       ),
     );
   }
@@ -87,6 +136,7 @@ class ToDoScreenState extends State<ToDoScreen> {
                       final newToDo = ToDo(
                         id: toDos.length + 1,
                         title: title,
+                        isComplete: false,
                       );
                       context.read<ToDoBloc>().add(AddToDoEvent(newToDo));
                       Navigator.of(context).pop();

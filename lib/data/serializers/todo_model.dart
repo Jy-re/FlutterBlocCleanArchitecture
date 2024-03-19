@@ -5,6 +5,7 @@ class ToDoSerialization {
     return ToDo(
       id: json['id'],
       title: json['title'],
+      isComplete: json['isComplete'] ?? false,
     );
   }
 
@@ -12,6 +13,7 @@ class ToDoSerialization {
     return {
       'id': todo.id,
       'title': todo.title,
+      'isComplete': todo.isComplete,
     };
   }
 }

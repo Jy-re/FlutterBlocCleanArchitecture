@@ -15,3 +15,9 @@ class DeleteTodoEvent extends ToDoEvent {
 
   DeleteTodoEvent(this.todo);
 }
+
+class UpdateToDoEvent extends ToDoEvent {
+  final ToDo todo;
+
+  UpdateToDoEvent(this.todo);
+}

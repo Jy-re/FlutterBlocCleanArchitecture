@@ -18,4 +18,12 @@ class InMemoryToDoDataProvider implements ToDoRepository {
   Future<void> deleteToDo(ToDo todo) async {
     _toDos.removeWhere((element) => element.id == todo.id);
   }
+
+  @override
+  Future<void> updateToDo(ToDo toDo) async {
+    final index = _toDos.indexWhere((element) => element.id == toDo.id);
+    if (index >= 0) {
+      _toDos[index] = toDo;
+    }
+  }
 }

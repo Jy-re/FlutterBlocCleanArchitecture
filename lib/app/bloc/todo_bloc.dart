@@ -8,13 +8,15 @@ class ToDoBloc extends Bloc<ToDoEvent, ToDoState> {
   final GetToDoUseCase getToDoUseCase;
   final AddToDoUseCase addToDoUseCase;
   final DeleteTodoUseCase deleteToDoUseCase;
+  final UpdateToDoUseCase updateTodoUseCase;
 
   ToDoBloc(this.addToDoUseCase, this.getToDoUseCase, this.deleteToDoUseCase,
-      ToDoRepositoryImpl toDoRepository)
+      this.updateTodoUseCase, ToDoRepositoryImpl toDoRepository)
       : super(ToDoInitialState()) {
     on<AddToDoEvent>(_onAddToDoEvent);
     on<GetToDoEvent>(_onGetToDoEvent);
     on<DeleteTodoEvent>(_onDeleteToDoEvent);
+    on<UpdateToDoEvent>(_onUpdateToDoEvent);
   }
 
   Future<void> _onAddToDoEvent(
@@ -33,6 +35,13 @@ class ToDoBloc extends Bloc<ToDoEvent, ToDoState> {
   Future<void> _onDeleteToDoEvent(
       DeleteTodoEvent event, Emitter<ToDoState> emit) async {
     await deleteToDoUseCase(event.todo);
+    final toDos = await getToDoUseCase();
+    emit(ToDoListState(toDos));
+  }
+
+  Future<void> _onUpdateToDoEvent(
+      UpdateToDoEvent event, Emitter<ToDoState> emit) async {
+    await updateTodoUseCase(event.todo);
     final toDos = await getToDoUseCase();
     emit(ToDoListState(toDos));
   }

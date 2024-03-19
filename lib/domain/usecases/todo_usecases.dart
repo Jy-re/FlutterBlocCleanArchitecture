@@ -30,3 +30,13 @@ class DeleteTodoUseCase {
     await repository.deleteToDo(todo);
   }
 }
+
+class UpdateToDoUseCase {
+  final ToDoRepository repository;
+
+  UpdateToDoUseCase(this.repository);
+
+  Future<void> call(ToDo todo) async {
+    await repository.updateToDo(todo);
+  }
+}

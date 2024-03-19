@@ -5,14 +5,11 @@ import '../../domain/repository/todo_repository.dart';
 import 'package:todo_bloc_clean_architecture/data/datasource/local_data_provider.dart';
 
 // IMPORT FOR IN MEMORY DATA STORAGE
-// import './in_memory_data_provider.dart';
-
-
+// import 'package:todo_bloc_clean_architecture/data/datasource/in_memory_data_provider.dart';
 
 class ToDoRepositoryImpl implements ToDoRepository {
   // IN MEMORY DATA STORAGE
   // final InMemoryToDoDataProvider dataProvider;
-
 
   // LOCAL DATA STORAGE
   final SharedPreferenceDataProvider dataProvider;
@@ -27,4 +24,9 @@ class ToDoRepositoryImpl implements ToDoRepository {
 
   @override
   Future<void> deleteToDo(ToDo todo) async => dataProvider.deleteToDo(todo);
+
+  @override
+  Future<void> updateToDo(ToDo todo) async {
+    await dataProvider.updateToDo(todo);
+  }
 }
