@@ -6,7 +6,7 @@ import 'package:todo_bloc_clean_architecture/app/core/injection.dart' as gi;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  gi.init(); 
+  gi.init();
   runApp(const MyApp());
 }
 

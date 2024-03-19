@@ -13,33 +13,33 @@ class ToDoBloc extends Bloc<ToDoEvent, ToDoState> {
   ToDoBloc(this.addToDoUseCase, this.getToDoUseCase, this.deleteToDoUseCase,
       this.updateTodoUseCase, ToDoRepositoryImpl toDoRepository)
       : super(ToDoInitialState()) {
-    on<AddToDoEvent>(_onAddToDoEvent);
-    on<GetToDoEvent>(_onGetToDoEvent);
-    on<DeleteTodoEvent>(_onDeleteToDoEvent);
-    on<UpdateToDoEvent>(_onUpdateToDoEvent);
+    on<AddToDoEvent>(onAddToDoEvent);
+    on<GetToDoEvent>(onGetToDoEvent);
+    on<DeleteTodoEvent>(onDeleteToDoEvent);
+    on<UpdateToDoEvent>(onUpdateToDoEvent);
   }
 
-  Future<void> _onAddToDoEvent(
+  Future<void> onAddToDoEvent(
       AddToDoEvent event, Emitter<ToDoState> emit) async {
     await addToDoUseCase(event.todo);
     final toDos = await getToDoUseCase();
     emit(ToDoListState(toDos));
   }
 
-  Future<void> _onGetToDoEvent(
+  Future<void> onGetToDoEvent(
       GetToDoEvent event, Emitter<ToDoState> emit) async {
     final toDos = await getToDoUseCase();
     emit(ToDoListState(toDos));
   }
 
-  Future<void> _onDeleteToDoEvent(
+  Future<void> onDeleteToDoEvent(
       DeleteTodoEvent event, Emitter<ToDoState> emit) async {
     await deleteToDoUseCase(event.todo);
     final toDos = await getToDoUseCase();
     emit(ToDoListState(toDos));
   }
 
-  Future<void> _onUpdateToDoEvent(
+  Future<void> onUpdateToDoEvent(
       UpdateToDoEvent event, Emitter<ToDoState> emit) async {
     await updateTodoUseCase(event.todo);
     final toDos = await getToDoUseCase();
